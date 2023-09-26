@@ -6,37 +6,64 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import TagService from './tag.service';
 
-@Controller('post')
+@Controller('posts')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postService: PostService,
+    private readonly tagService: TagService,
+  ) {}
 
-  @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  // Tag
+  @Get('/tags')
+  findAllTags() {
+    return this.tagService.findAll();
   }
 
-  @Get()
-  findAll() {
-    return this.postService.findAll();
+  @Get('/tags/:id')
+  findOneTag(@Param('id', ParseIntPipe) id: number) {
+    return this.tagService.findOne(id);
+  }
+
+  // Post
+  @Post()
+  async create(@Body() createPostDto: CreatePostDto) {
+    const tagsInDto = createPostDto.tags;
+    try {
+      const tags = await this.tagService.create(tagsInDto);
+
+      return await this.postService.create(createPostDto, tags);
+    } catch (e) {
+      return 'failed..';
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.postService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    let tags;
+    if (updatePostDto.tags !== undefined) {
+      tags = await this.tagService.create(updatePostDto.tags);
+    }
+
+    return this.postService.update(id, updatePostDto, tags);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.postService.remove(id);
   }
 }

@@ -2,6 +2,7 @@ import { Comment } from 'src/comment/entities/comment.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -26,10 +27,19 @@ export class Post {
   })
   content: string;
 
+  @Column({
+    type: 'integer',
+  })
+  boardId: number;
+
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];
 
-  @ManyToOne(() => Board, (board) => board.posts)
+  @ManyToOne(() => Board, (board) => board.posts, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'boardId' })
   board: Board;
 
   @ManyToMany(() => Tag, (tag) => tag.posts)

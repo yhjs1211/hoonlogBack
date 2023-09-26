@@ -1,5 +1,11 @@
 import { Post } from 'src/post/entities/post.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Comment {
@@ -17,6 +23,15 @@ export class Comment {
   })
   comment: string;
 
-  @ManyToOne(() => Post, (post) => post.comments)
+  @Column({
+    type: 'integer',
+  })
+  postId: number;
+
+  @ManyToOne(() => Post, (post) => post.comments, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'postId' })
   post: Post;
 }

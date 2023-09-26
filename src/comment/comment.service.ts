@@ -9,12 +9,17 @@ export class CommentService {
   constructor(private readonly commentRepository: CommentRepository) {}
 
   async create(createCommentDto: CreateCommentDto): Promise<string> {
+    const createObject = {
+      userId: createCommentDto.userId,
+      comment: createCommentDto.comment,
+      postId: parseInt(createCommentDto.postId),
+    };
     try {
       await this.commentRepository
         .createQueryBuilder()
         .insert()
         .into(Comment)
-        .values(createCommentDto)
+        .values(createObject)
         .execute();
       return 'success';
     } catch (e) {

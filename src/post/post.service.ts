@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
+import PostRepository from './repositories/post.repository';
+import { Post } from './entities/post.entity';
+import Tag from './entities/tag.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  constructor(private readonly postRepository: PostRepository) {}
+
+  async create(createPostDto: CreatePostDto, tags: Tag[]): Promise<Post> {
+    const dataObject = {
+      title: createPostDto.title,
+      content: createPostDto.content,
+      boardId: createPostDto.boardId,
+      tags,
+    };
+
+    try {
+      const post = new Post();
+
+      Object.entries(dataObject).forEach(([key, value]) => {
+        post[key] = value;
+      });
+
+      return await this.postRepository.save(post);
+    } catch (e) {
+      throw new BadRequestException('Please try again');
+    }
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findOne(id: number) {
+    return await this.postRepository.findOne({
+      where: { id },
+      relations: {
+        tags: true,
+        comments: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async update(
+    id: number,
+    updatePostDto: UpdatePostDto,
+    tags?: Tag[],
+  ): Promise<Post> {
+    try {
+      const post: Post = await this.postRepository.findOne({
+        where: { id },
+        relations: { tags: true },
+      });
+      if (tags) post.tags = tags;
+
+      const updateArr = Object.entries(updatePostDto);
+
+      updateArr.forEach(async ([key, value]) => {
+        if (key !== 'tags') post[key] = value;
+      });
+
+      return await this.postRepository.save(post);
+    } catch (e) {
+      throw new BadRequestException('Please try again.. in service');
+    }
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: number): Promise<number> {
+    return (
+      await this.postRepository
+        .createQueryBuilder()
+        .delete()
+        .where('id=:id', { id })
+        .execute()
+    ).affected;
   }
 }

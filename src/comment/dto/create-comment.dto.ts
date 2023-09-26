@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateCommentDto {
   @IsString()
@@ -7,6 +7,6 @@ export class CreateCommentDto {
   @IsString()
   readonly comment: string;
 
-  @IsNumber()
-  readonly postId: number;
+  @IsString()
+  readonly postId: string;
 }
