@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import TagRepository from './repositories/tag.repository';
-import Tag from './entities/tag.entity';
+import TagRepository from '../repositories/tag.repository';
+import Tag from '../entities/tag.entity';
 
 @Injectable()
 export default class TagService {

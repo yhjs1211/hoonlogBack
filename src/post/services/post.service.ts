@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import PostRepository from './repositories/post.repository';
-import { Post } from './entities/post.entity';
-import Tag from './entities/tag.entity';
-import { UpdatePostDto } from './dto/update-post.dto';
+import PostRepository from '../repositories/post.repository';
+import { Post } from '../entities/post.entity';
+import Tag from '../entities/tag.entity';
+import { UpdatePostDto } from '../dto/update-post.dto';
+import { CreatePostDto } from '../dto/create-post.dto';
 
 @Injectable()
 export class PostService {

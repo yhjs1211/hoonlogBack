@@ -7,17 +7,22 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
-import { PostService } from './post.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { PostService } from './services/post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import TagService from './tag.service';
+import TagService from './services/tag.service';
+import ImageService from './services/image.service';
 
 @Controller('posts')
 export class PostController {
   constructor(
     private readonly postService: PostService,
     private readonly tagService: TagService,
+    private readonly imageService: ImageService,
   ) {}
 
   // Tag
@@ -29,6 +34,17 @@ export class PostController {
   @Get('/tags/:id')
   findOneTag(@Param('id', ParseIntPipe) id: number) {
     return this.tagService.findOne(id);
+  }
+
+  // Image Upload
+  @Post('/images')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+    console.log('come to here');
+    console.log(file);
+
+    const res = await this.imageService.uploadImage(file);
+    return res;
   }
 
   // Post
