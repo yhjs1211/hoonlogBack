@@ -40,9 +40,6 @@ export class PostController {
   @Post('/images')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(@UploadedFile() file: Express.Multer.File) {
-    console.log('come to here');
-    console.log(file);
-
     const res = await this.imageService.uploadImage(file);
     return res;
   }

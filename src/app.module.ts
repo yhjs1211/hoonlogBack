@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { BoardModule } from './board/board.module';
 import { PostModule } from './post/post.module';
 import { CommentModule } from './comment/comment.module';
-import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Board } from './board/entities/board.entity';
@@ -31,7 +30,6 @@ import Tag from './post/entities/tag.entity';
     BoardModule,
     PostModule,
     CommentModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

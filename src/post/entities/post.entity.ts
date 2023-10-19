@@ -1,6 +1,7 @@
 import { Comment } from 'src/comment/entities/comment.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -8,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import Tag from './tag.entity';
 import { Board } from 'src/board/entities/board.entity';
@@ -47,4 +49,14 @@ export class Post {
     name: 'Post_Tag',
   })
   tags: Tag[];
+
+  @CreateDateColumn({
+    type: 'timestamp',
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+  })
+  updatedAt: Date;
 }

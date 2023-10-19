@@ -1,10 +1,12 @@
 import { Post } from 'src/post/entities/post.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -34,4 +36,14 @@ export class Comment {
   })
   @JoinColumn({ name: 'postId' })
   post: Post;
+
+  @CreateDateColumn({
+    type: 'timestamp',
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+  })
+  updatedAt: Date;
 }
