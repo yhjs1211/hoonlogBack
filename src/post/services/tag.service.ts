@@ -27,13 +27,8 @@ export default class TagService {
     }
   }
 
-  async findOne(id: number): Promise<Tag> {
-    return await this.tagRepository.findOne({
-      where: { id },
-      relations: {
-        posts: true,
-      },
-    });
+  findPostsByTagId(id: number): Promise<Tag> {
+    return this.tagRepository.findPostsByTagId(id);
   }
 
   async findAll(): Promise<Tag[]> {

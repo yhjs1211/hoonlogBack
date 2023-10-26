@@ -32,8 +32,8 @@ export class PostController {
   }
 
   @Get('/tags/:id')
-  findOneTag(@Param('id', ParseIntPipe) id: number) {
-    return this.tagService.findOne(id);
+  async findOneTag(@Param('id', ParseIntPipe) id: number) {
+    return await this.tagService.findPostsByTagId(id);
   }
 
   // Image Upload
@@ -45,6 +45,16 @@ export class PostController {
   }
 
   // Post
+  @Get()
+  findAll() {
+    return this.postService.findAllPosts();
+  }
+
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.postService.findOne(id);
+  }
+
   @Post()
   async create(@Body() createPostDto: CreatePostDto) {
     const tagsInDto = createPostDto.tags;
@@ -55,11 +65,6 @@ export class PostController {
     } catch (e) {
       return 'failed..';
     }
-  }
-
-  @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.postService.findOne(id);
   }
 
   @Patch(':id')

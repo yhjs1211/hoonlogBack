@@ -16,12 +16,8 @@ export class BoardService {
     return 'Success';
   }
 
-  findAll() {
+  findAllPostsByBoardId(id: number) {
     return `This action returns all board`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} board`;
   }
 
   update(id: number, updateBoardDto: UpdateBoardDto) {

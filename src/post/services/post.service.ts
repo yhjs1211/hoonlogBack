@@ -30,6 +30,15 @@ export class PostService {
     }
   }
 
+  async findAllPosts() {
+    return await this.postRepository.find({
+      relations: {
+        tags: true,
+        comments: true,
+      },
+    });
+  }
+
   async findOne(id: number) {
     return await this.postRepository.findOne({
       where: { id },

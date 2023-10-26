@@ -26,4 +26,15 @@ export default class TagRepository extends Repository<Tag> {
 
     return await this.query(`SELECT * FROM tag ${whereStr}`);
   }
+  async findPostsByTagId(id: number): Promise<Tag> {
+    return await this.findOne({
+      where: { id },
+      relations: {
+        posts: {
+          tags: true,
+          comments: true,
+        },
+      },
+    });
+  }
 }
